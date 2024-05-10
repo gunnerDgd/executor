@@ -1,10 +1,8 @@
-#ifndef __CORE_H__
-#define __CORE_H__
+#ifndef VAPOR_CORE_H
+#define VAPOR_CORE_H
 
-#include "core/cpu.h"
-#include "core/map.h"
-#include "core/mmu.h"
-#include "core/sys.h"
-#include "core/run.h"
+#ifdef PRESET_ARCH_X86_64
+#include "core/x86_64.h"
+#endif
 
 #endif
