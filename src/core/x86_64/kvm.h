@@ -4,6 +4,13 @@
 #include <core.h>
 #include <collections.h>
 
+#include "kvm/bus.h"
+#include "kvm/cpu.h"
+#include "kvm/map.h"
+#include "kvm/pa.h"
+#include "kvm/va.h"
+#include "kvm/root.h"
+
 extern obj_trait *vp_core_t;
 struct            vp_core  {
     obj   head;
