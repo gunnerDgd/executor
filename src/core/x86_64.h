@@ -3,6 +3,8 @@
 
 #ifdef PRESET_LINUX
 #include "x86_64/kvm.h"
+#elif  PRESET_WIN32
+#include "x86_64/hyperv.h"
 #endif
 
 #endif

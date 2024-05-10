@@ -1,19 +1,25 @@
-#ifndef __CORE_HYPERV_MAP_H__
-#define __CORE_HYPERV_MAP_H__
+#ifndef VAPOR_CORE_HYPERV_MAP_H
+#define VAPOR_CORE_HYPERV_MAP_H
 
-#include "details/map.h"
+#include <core.h>
 
-void*  vp_map_mmio (void*, vp_map_ops*, obj*);
-void*  vp_map_pio  (void*, vp_map_ops*, obj*);
-void*  vp_map_mem  (void*, void*)            ;
+struct vp_root;
+struct vp_pa;
 
-u64_t  vp_map_type (void*)                   ;
-u64_t  vp_map_begin(void*)                   ;
-u64_t  vp_map_end  (void*)                   ;
-u64_t  vp_map_size (void*)                   ;
+extern obj_trait *vp_map_t;
+typedef struct    vp_map  {
+    obj           head;
+    u64_t         len;
+    struct vp_pa *pa;
+    void         *ua;
+}   vp_map;
 
-bool_t vp_map_read (void*, void*, void*, u64_t);
-bool_t vp_map_write(void*, void*, void*, u64_t);
+bool_t        vp_map_new  (vp_map*, u32_t, va_list);
+bool_t        vp_map_clone(vp_map*, vp_map*)       ;
+void          vp_map_del  (vp_map*)                ;
 
+u64_t         vp_map_len  (vp_map*);
+struct vp_pa* vp_map_pa   (vp_map*);
+void*         vp_map_ua   (vp_map*);
 
 #endif

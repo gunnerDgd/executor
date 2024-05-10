@@ -1,7 +1,9 @@
-if   (PRESET_LINUX)
-    if   (PRESET_ARCH_X86_64)
+if   (PRESET_ARCH_X86_64)
+    if     (UNIX AND NOT APPLE)
         add_subdirectory(core/x86_64/kvm)
-    endif()
+    elseif (WIN32)
+        add_subdirectory(core/x86_64/hyperv)
+    endif  ()
 endif()
 
 add_subdirectory(bus)

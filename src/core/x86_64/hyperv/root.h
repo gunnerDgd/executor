@@ -1,14 +1,28 @@
-#ifndef __CORE_HYPERV_ROOT_H__
-#define __CORE_HYPERV_ROOT_H__
+#ifndef VAPOR_CORE_HYPERV_ROOT_H
+#define VAPOR_CORE_HYPERV_ROOT_H
 
-#include "details/root.h"
-#include "details/map.h"
+#include <core.h>
+#include <collections.h>
 
-void* vp_root_node     (vp_root*, void*)       ;
-void* vp_root_map      (vp_root*, u64_t, u64_t);
-void* vp_root_map_find (vp_root*, u64_t, u64_t);
+#include <WinHvPlatformDefs.h>
+#include <WinHvPlatform.h>
 
-void* vp_port_map      (vp_root*, u64_t, u64_t);
-void* vp_port_find     (vp_root*, u64_t, u64_t);
+struct vp_cpu;
+struct vp_pa ;
+
+extern obj_trait *vp_root_t;
+typedef struct    vp_root    {
+    obj                  head;
+    WHV_PARTITION_HANDLE root;
+    map                  cpu,
+                         pa ;
+}   vp_root;
+
+bool_t         vp_root_new    (vp_root*, u32_t, va_list);
+bool_t         vp_root_clone  (vp_root*, vp_root*)      ;
+void           vp_root_del    (vp_root*)                ;
+
+struct vp_cpu* vp_root_cpu    (vp_root*, u64_t)       ;
+struct vp_pa*  vp_root_pa     (vp_root*, reg_t, u64_t);
 
 #endif

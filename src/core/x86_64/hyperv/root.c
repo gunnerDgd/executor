@@ -1,79 +1,46 @@
 #include "root.h"
-#include "node.h"
 
-void* 
-    vp_root_node
-        (vp_root* par, void* par_node)                    {
-            if (!par)                       return false_t;
-            if (trait_of(par) != vp_root_t) return false_t;
-            if (!par_node)                          {
-                void*  ret  = list_begin(&par->node);
-                if    (ret == list_end  (&par->node)) return 0;
-                return ret;
-            }
+#include "../hyperv.h"
+#include "cpu.h"
+#include "pa.h"
 
-            vp_node* ret = list_get(par_node);
-            if (!ret)                       return 0;
-            if (trait_of(ret) != vp_node_t) return 0;
-            if (ret->root != par)           return 0;
-            
-            par_node = list_next(par_node); if (par_node == list_end(&par->node)) return 0;
-            return par_node;
+
+obj_trait vp_root_trait = make_trait (
+    vp_root_new    ,
+    vp_root_clone  ,
+    null_t         ,
+    vp_root_del    ,
+    sizeof(vp_root),
+    null_t
+);
+
+obj_trait *vp_root_t = &vp_root_trait;
+
+bool_t
+    vp_root_new
+        (vp_root* self, u32_t count, va_list arg)                  {
+            if (!make_at (&self->cpu, map) from (0)) return false_t;
+            if (!make_at (&self->pa , map) from (0)) return false_t;
+            if (WHvCreatePartition(&self->root))     return false_t;
+            return true_t;
+    new_err:
+            del (&self->cpu);
+            del (&self->pa) ;
+            return false_t;
 }
 
-void* 
-    vp_root_map
-        (vp_root* par, u64_t par_begin, u64_t par_end) {
-            if (!par)                       return 0;
-            if (trait_of(par) != vp_root_t) return 0;
-
-            list_for (&par->node, node)                           {
-                void* ret = vp_node_map (node, par_begin, par_end);
-                if   (ret) return ret;
-            }
-
-            return 0;
+bool_t
+    vp_root_clone
+        (vp_root* self, vp_root* clone) {
+            return false_t;
 }
 
-void* 
-    vp_root_map_find
-        (vp_root* par, u64_t par_addr, u64_t par_len) {
-            if (!par)                       return 0;
-            if (trait_of(par) != vp_root_t) return 0;
-
-            list_for (&par->node, node)                              {
-                void* ret = vp_node_map_find(node, par_addr, par_len);
-                if   (ret) return ret;
-            }
-
-            return 0;
+void
+    vp_root_del
+        (vp_root* self)     {
+            del (&self->cpu);
+            del (&self->pa) ;
 }
 
-void* 
-    vp_port_map
-        (vp_root* par, u64_t par_begin, u64_t par_end) {
-            if (!par)                       return 0;
-            if (trait_of(par) != vp_root_t) return 0;
-
-            vp_map *map = make (vp_map_t) from (2, par_begin, par_end);
-            void   *ret = 0;
-
-            if (!map)                                 return 0;
-            if (!(ret = vp_mmu_map(&par->port, map))) {
-                del(map);
-                return 0;
-            }
-
-            map->type = vp_map_type_pio;
-            return ret;
-}
-
-void* 
-    vp_port_find
-        (vp_root* par, u64_t par_addr, u64_t par_len) {
-            if (!par)                       return 0;
-            if (trait_of(par) != vp_root_t) return 0;
-            
-            void* ret = vp_mmu_find(&par->port, par_addr, par_len);
-            return ret;
-}
+struct vp_cpu* vp_root_cpu    (vp_root*, u64_t)       ;
+struct vp_pa*  vp_root_pa     (vp_root*, reg_t, u64_t);
