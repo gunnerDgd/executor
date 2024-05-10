@@ -13,13 +13,14 @@ typedef struct    vp_pa  {
     reg_t           pa;
 }   vp_pa;
 
-bool_t vp_pa_new  (vp_pa*, u32_t, va_list);
-bool_t vp_pa_clone(vp_pa*, vp_pa*)        ;
-void   vp_pa_del  (vp_pa*)                ;
+bool_t          vp_pa_new  (vp_pa*, u32_t, va_list);
+bool_t          vp_pa_clone(vp_pa*, vp_pa*)        ;
+void            vp_pa_del  (vp_pa*)                ;
 
-reg_t  vp_pa_begin(vp_pa*);
-reg_t  vp_pa_end  (vp_pa*);
-u64_t  vp_pa_len  (vp_pa*);
-obj*   vp_pa_sub  (vp_pa*);
+struct vp_root *vp_pa_root (vp_pa*);
+reg_t           vp_pa_begin(vp_pa*);
+reg_t           vp_pa_end  (vp_pa*);
+u64_t           vp_pa_len  (vp_pa*);
+obj*            vp_pa_sub  (vp_pa*);
 
 #endif

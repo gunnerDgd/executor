@@ -3,12 +3,14 @@
 
 #include <core.h>
 
+struct vp_root;
 struct vp_pa;
 
 extern obj_trait *vp_map_t;
 typedef struct    vp_map  {
     obj           head;
     u64_t         len;
+    u64_t         uid;
     struct vp_pa *pa;
     void         *ua;
 }   vp_map;
@@ -19,7 +21,6 @@ void          vp_map_del  (vp_map*)                ;
 
 u64_t         vp_map_len  (vp_map*);
 struct vp_pa* vp_map_pa   (vp_map*);
-struct vp_va* vp_map_va   (vp_map*);
 void*         vp_map_ua   (vp_map*);
 
 #endif

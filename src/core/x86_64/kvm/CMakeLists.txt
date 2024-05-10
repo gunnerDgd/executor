@@ -1,4 +1,6 @@
 add_library (vapor-core STATIC
+    ../../../core.h
+    ../../x86_64.h
     ../kvm.h
     ../kvm.c
 
