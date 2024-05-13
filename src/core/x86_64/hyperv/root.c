@@ -46,8 +46,8 @@ struct vp_cpu*
     vp_root_cpu    
         (vp_root* self, u64_t cpu)                        {
             if (trait_of(self) != vp_root_t) return null_t;
-            return value_as              (
-                map_find(&self->cpu, cpu),
+            return value_as                      (
+                map_find(&self->cpu, (any_t) cpu),
                 vp_cpu*
             );
 }
@@ -57,8 +57,8 @@ struct vp_pa*
         (vp_root* self, reg_t pa, u64_t len)              {
             if (trait_of(self) != vp_root_t) return null_t;
 
-            vp_pa* pa = value_as (map_find(&self->pa, pa), vp_pa*);
+            vp_pa* ret = value_as (map_find(&self->pa, (any_t) pa), vp_pa*);
             if (trait_of(pa) != vp_pa_t) return null_t;
-            if (vp_pa_len(pa) > len)     return null_t;
-            return pa;
+            if (vp_pa_len(ret) > len)    return null_t;
+            return ret;
 }
