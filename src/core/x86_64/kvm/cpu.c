@@ -176,15 +176,3 @@ bool_t
             if (ioctl(self->cpu, KVM_SET_REGS , &regs))  return false_t;
             return true_t;
 }
-
-struct vp_va*
-    vp_cpu_trans
-        (vp_cpu* self, struct vp_pa* pa)                 {
-            if (trait_of(self) != vp_cpu_t) return null_t;
-            if (trait_of(pa)   != vp_pa_t)  return null_t;
-            return make (vp_va) from                     (
-                2   ,
-                self,
-                pa
-            );
-}

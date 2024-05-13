@@ -66,12 +66,11 @@ typedef struct    vp_cpu  {
     u64_t           uid;
 }   vp_cpu;
 
-bool_t        vp_cpu_new     (vp_cpu*, u32_t, va_list);
-bool_t        vp_cpu_clone   (vp_cpu*, vp_cpu*)       ;
-void          vp_cpu_del     (vp_cpu*)                ;
+bool_t vp_cpu_new     (vp_cpu*, u32_t, va_list);
+bool_t vp_cpu_clone   (vp_cpu*, vp_cpu*)       ;
+void   vp_cpu_del     (vp_cpu*)                ;
 
-struct vp_va* vp_cpu_trans   (vp_cpu*, struct vp_pa*);
-bool_t        vp_cpu_sync_out(vp_cpu*, vp_reg*);
-bool_t        vp_cpu_sync_in (vp_cpu*, vp_reg*);
+bool_t vp_cpu_sync_out(vp_cpu*, vp_reg*);
+bool_t vp_cpu_sync_in (vp_cpu*, vp_reg*);
 
 #endif
