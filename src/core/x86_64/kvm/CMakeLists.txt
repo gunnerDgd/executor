@@ -21,4 +21,7 @@ add_library (vapor-core STATIC
 
     bus.h
     bus.c
+
+    pic.h
+    pic.c
 )
