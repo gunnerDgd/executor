@@ -60,9 +60,7 @@ bool_t
             self->len  = len;
             self->pa   = pa;
 
-            if (!map_push(&root->pa, (obj*) self)) return false_t;
-            del(self);
-
+            if (!map_move(&root->pa, (obj*) self)) return false_t;
             self->sub = null_t;
             return true_t;
 }

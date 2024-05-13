@@ -59,12 +59,11 @@ bool_t
             self->cpu  = cpu ;
 
             if (WHvCreateVirtualProcessor(root->root, cpu, 0)) return false_t;
-            if (!map_push (&root->cpu, self))                                {
+            if (!map_move (&root->cpu, self))                                {
                 WHvDeleteVirtualProcessor(root->root, cpu);
                 return false_t;
             }
 
-            del    (self);
             return true_t;
 }
 
