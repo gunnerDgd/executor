@@ -130,6 +130,7 @@ static u64_t
                 [KVM_EXIT_UNKNOWN]        = vp_cpu_err     ,
                 [KVM_EXIT_EXCEPTION]      = vp_cpu_err     ,
                 [KVM_EXIT_INTERNAL_ERROR] = vp_cpu_err     ,
+                [KVM_EXIT_FAIL_ENTRY]     = vp_cpu_err     ,
                 [KVM_EXIT_HLT]            = vp_cpu_halt    ,
                 [KVM_EXIT_SHUTDOWN]       = vp_cpu_shutdown,
                 [KVM_EXIT_IO]             = vp_cpu_io      ,
@@ -357,9 +358,10 @@ u64_t
             if (trait_of(self) != vp_cpu_t) return false_t;
             struct kvm_run *run = self->run;
 
-            switch (run->exit_reason)                                            {
-                case KVM_EXIT_INTERNAL_ERROR: return run->internal.suberror      ;
-                case KVM_EXIT_UNKNOWN       : return run->hw.hardware_exit_reason;
+            switch (run->exit_reason)                                                             {
+                case KVM_EXIT_INTERNAL_ERROR: return run->internal.suberror                       ;
+                case KVM_EXIT_UNKNOWN       : return run->hw.hardware_exit_reason                 ;
+                case KVM_EXIT_FAIL_ENTRY    : return run->fail_entry.hardware_entry_failure_reason;
                 default                     : return 0;
             }
 }
