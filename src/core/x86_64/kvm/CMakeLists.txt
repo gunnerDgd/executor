@@ -16,12 +16,13 @@ add_library (vapor-core STATIC
     va.h
     va.c
 
-    map.h
-    map.c
-
     bus.h
     bus.c
 
+    map.h
+    map.c
+
     pic.h
     pic.c
+
 )

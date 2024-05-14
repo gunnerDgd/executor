@@ -10,6 +10,9 @@ add_library (vapor-core STATIC
     cpu.h
     cpu.c
 
+    bus.h
+    bus.c
+
     pa.h
     pa.c
 
@@ -19,6 +22,4 @@ add_library (vapor-core STATIC
     map.h
     map.c
 
-    bus.h
-    bus.c
 )

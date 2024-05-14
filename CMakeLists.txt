@@ -44,5 +44,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/crisp/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/asterisk/src)
 
 add_subdirectory   (lib/asterisk/example)
+add_subdirectory   (include)
 add_subdirectory   (src)
 add_subdirectory   (examples)
