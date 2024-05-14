@@ -27,7 +27,8 @@ bool_t
             u64_t          len = 0ull  ; if (count > 2) len = va_arg(arg, u64_t);
 
             struct kvm_translation trans = { .linear_address = va };
-            if (trait_of(cpu) != vp_cpu_t) return false_t;
+            if (trait_of(cpu)  != vp_cpu_t)   return false_t;
+            if (cpu->root->thd != this_thd()) return false_t;
             self->len = len;
             self->cpu = cpu;
             self->va  = va ;

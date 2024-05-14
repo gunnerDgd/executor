@@ -24,8 +24,8 @@ ord_t
 }
 
 ops_cmp vp_pa_do_cmp = make_ops_cmp (
-    vp_pa_do_ord_arg,
-    vp_pa_do_ord
+    vp_pa_do_ord   ,
+    vp_pa_do_ord_arg
 );
 
 obj_ops vp_pa_do      = {
@@ -52,6 +52,7 @@ bool_t
             vp_cpu  *cpu  = null_t; if (count > 3) cpu  = va_arg(arg, any_t);
 
             if (trait_of(root) != vp_root_t) return false_t;
+            if (root->thd != this_thd())     return false_t;
             if (len & mask (11))             return false_t;
             if (!len)                        return false_t;
 
@@ -60,9 +61,7 @@ bool_t
             self->len  = len;
             self->pa   = pa;
 
-            if (!map_push(&root->pa, (obj*) self)) return false_t;
-            del(self);
-
+            if (!map_move(&root->pa, self)) return false_t;
             self->sub = null_t;
             return true_t;
 }

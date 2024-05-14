@@ -29,19 +29,20 @@ bool_t
             if (len != pa->len)          return false_t;
             if (!ua)                     return false_t;
 
+            if (pa->root->thd != this_thd()) return false_t;
             self->uid = pa->root->map;
             self->len = len;
             self->pa  = pa;
             self->ua  = ua;
 
             struct kvm_userspace_memory_region map = {
-                .guest_phys_addr = pa->pa      ,
-                .userspace_addr  = (u64_t) ua  ,
-                .memory_size     = len         ,
+                .guest_phys_addr = pa->pa    ,
+                .userspace_addr  = (u64_t) ua,
+                .memory_size     = len       ,
                 .slot            = self->uid
             };
 
-            if (ioctl (pa->root->root, KVM_SET_USER_MEMORY_REGION, &map) < 0) return false_t;
+            if (ioctl (pa->root->root, KVM_SET_USER_MEMORY_REGION, &map)) return false_t;
             pa->sub = (obj*) self;
             pa->root->map++;
             return true_t;
