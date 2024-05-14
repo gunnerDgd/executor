@@ -86,9 +86,9 @@ void   vp_cpu_del     (vp_cpu*)                ;
 
 bool_t vp_cpu_sync_out(vp_cpu*, vp_reg*);
 bool_t vp_cpu_sync_in (vp_cpu*, vp_reg*);
-fut*   vp_cpu_run     (vp_cpu*)         ;
 
-u64_t  vp_err         (vp_cpu*);
+u64_t  vp_cpu_error   (vp_cpu*);
+fut*   vp_cpu_run     (vp_cpu*);
 
 void   vp_io_ready    (vp_cpu*, any_t);
 u64_t  vp_io_port     (vp_cpu*);

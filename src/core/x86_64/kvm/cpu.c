@@ -352,7 +352,7 @@ fut*
 }
 
 u64_t
-    vp_err
+    vp_cpu_error
         (vp_cpu* self)                                    {
             if (trait_of(self) != vp_cpu_t) return false_t;
             struct kvm_run *run = self->run;
