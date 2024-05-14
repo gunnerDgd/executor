@@ -14,20 +14,22 @@ obj_trait *vp_bus_t = &vp_bus_trait;
 
 bool_t
     vp_bus_new
-        (vp_bus* self, u32_t count, va_list arg)                               {
-            vp_bus_ops *ops   = null_t; if (count > 0) ops = va_arg(arg, any_t);
-            vp_pa      *pa    = null_t; if (count > 1) pa  = va_arg(arg, any_t);
-            obj        *bus   = null_t; if (count > 2) bus = va_arg(arg, any_t);
+        (vp_bus* self, u32_t count, va_list arg)                             {
+            vp_bus_ops *ops = null_t; if (count > 0) ops = va_arg(arg, any_t);
+            obj        *bus = null_t; if (count > 1) bus = va_arg(arg, any_t);
+            vp_pa      *pa  = null_t; if (count > 2) pa  = va_arg(arg, any_t);
 
             if (trait_of(pa)  != vp_pa_t) return false_t;
             if (trait_of(bus) == null_t)  return false_t;
             if (!ops)                     return false_t;
 
-            pa->sub   = (obj*) self;
             self->bus = bus;
             self->ops = ops;
             self->pa  = pa ;
             return true_t;
+    new_err:
+            del (&self->pa);
+            return  false_t;
 }
 
 bool_t vp_bus_clone (vp_bus* self, vp_bus* clone) { return false_t; }
