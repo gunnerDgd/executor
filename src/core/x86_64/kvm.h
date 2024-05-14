@@ -6,6 +6,10 @@
 
 #include "kvm/bus.h"
 #include "kvm/cpu.h"
+
+#include "kvm/pic.h"
+#include "kvm/irq.h"
+
 #include "kvm/map.h"
 #include "kvm/pa.h"
 #include "kvm/va.h"
@@ -18,7 +22,9 @@ struct            vp_core  {
     u64_t kvm;
     u64_t cpu;
     u64_t mem;
-}   vp_core;
+};
+
+extern struct vp_core vp_core;
 
 bool_t vp_core_new  (struct vp_core*, u32_t, va_list) ;
 bool_t vp_core_clone(struct vp_core*, struct vp_core*);
