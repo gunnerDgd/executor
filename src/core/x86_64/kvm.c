@@ -37,7 +37,7 @@ bool_t
 }
 
 bool_t vp_core_clone(struct vp_core* self, struct vp_core* clone) { return false_t; }
-bool_t vp_core_ref  (struct vp_core* self)                        { return false_t; }
+bool_t vp_core_ref  (struct vp_core* self)                        { return true_t ; }
 
 void
     vp_core_del
