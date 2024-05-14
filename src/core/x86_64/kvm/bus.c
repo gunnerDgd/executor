@@ -25,7 +25,7 @@ bool_t
 
             if (pa->root->thd != this_thd()) return false_t;
             if (!ops)                        return false_t;
-
+            pa ->sub  = self;
             self->bus = bus;
             self->ops = ops;
             self->pa  = pa ;
@@ -40,10 +40,7 @@ bool_t
         (vp_bus* self, reg_t addr, u8_t* buf)             {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->in8                            (
+            return self->ops->in8                         (
                 self->bus,
                 addr     ,
                 buf
@@ -52,13 +49,10 @@ bool_t
 
 bool_t
     vp_bus_in16
-        (vp_bus* self, reg_t addr, u16_t* buf)             {
+        (vp_bus* self, reg_t addr, u16_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->in16                           (
+            return self->ops->in16                        (
                 self->bus,
                 addr     ,
                 buf
@@ -70,10 +64,7 @@ bool_t
         (vp_bus* self, reg_t addr, u32_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->in32                           (
+            return self->ops->in32                        (
                 self->bus,
                 addr     ,
                 buf
@@ -85,10 +76,7 @@ bool_t
         (vp_bus* self, reg_t addr, u64_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->in64                           (
+            return self->ops->in64                        (
                 self->bus,
                 addr     ,
                 buf
@@ -101,10 +89,7 @@ bool_t
         (vp_bus* self, reg_t addr, u8_t* buf)             {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->out8                           (
+            return self->ops->out8                        (
                 self->bus,
                 addr     ,
                 buf
@@ -116,10 +101,7 @@ bool_t
         (vp_bus* self, reg_t addr, u16_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->out16                          (
+            return self->ops->out16                       (
                 self->bus,
                 addr     ,
                 buf
@@ -131,10 +113,7 @@ bool_t
         (vp_bus* self, reg_t addr, u32_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->out32                          (
+            return self->ops->out32                       (
                 self->bus,
                 addr     ,
                 buf
@@ -146,10 +125,7 @@ bool_t
         (vp_bus* self, reg_t addr, u64_t* buf)            {
             if (trait_of(self) != vp_bus_t) return false_t;
             if (!buf)                       return false_t;
-
-            if (vp_pa_begin(self->pa) <  addr) return false_t;
-            if (vp_pa_end  (self->pa) >= addr) return false_t;
-            return self->ops->out64                          (
+            return self->ops->out64                       (
                 self->bus,
                 addr     ,
                 buf
