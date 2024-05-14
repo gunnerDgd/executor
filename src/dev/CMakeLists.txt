@@ -4,3 +4,5 @@ add_library (vapor-dev STATIC
     pio.h
     pio.c
 )
+
+target_link_libraries (vapor-dev PRIVATE crisp)
