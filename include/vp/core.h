@@ -1,16 +1,18 @@
-#ifndef __CORE_H__
-#define __CORE_H__
+#ifndef VAPOR_CORE_H
+#define VAPOR_CORE_H
 
+#include "core/bus.h"
 #include "core/cpu.h"
+#include "core/irq.h"
 #include "core/map.h"
-#include "core/node.h"
+#include "core/pa.h"
+#include "core/pic.h"
 #include "core/root.h"
+#include "core/va.h"
 
-#include "core/run/halt.h"
-#include "core/run/mmio.h"
-#include "core/run/pio.h"
+extern obj_trait *vp_core_t;
+struct            vp_core { u8_t core[2 KB]; };
 
-bool_t core_init  ();
-void   core_deinit();
+extern struct vp_core vp_core;
 
 #endif

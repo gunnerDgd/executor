@@ -1,13 +1,12 @@
-#ifndef __CORE_ROOT_H__
-#define __CORE_ROOT_H__
+#ifndef VAPOR_CORE_ROOT_H
+#define VAPOR_CORE_ROOT_H
 
-#include "node.h"
+#include <core.h>
 
-extern  obj_trait *vp_root_t;
-typedef obj       *vp_root  ;
+extern obj_trait *vp_root_t;
+typedef struct    vp_root { u8_t root[1 KB]; } vp_root;
 
-vp_node vp_root_node     (vp_root, vp_node)     ;
-vp_map  vp_root_map      (vp_root, u64_t, u64_t);
-vp_map  vp_root_map_find (vp_root, u64_t, u64_t);
+struct vp_cpu* vp_root_cpu  (vp_root*, u64_t)       ;
+struct vp_pa*  vp_root_pa   (vp_root*, reg_t, u64_t);
 
 #endif
