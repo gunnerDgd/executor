@@ -8,3 +8,12 @@ endif()
 
 add_subdirectory(bus)
 add_subdirectory(dev)
+
+add_library          (vapor INTERFACE)
+target_link_libraries(vapor INTERFACE
+    vapor-core
+    vapor-bus
+    vapor-dev
+    asterisk
+    crisp
+)
