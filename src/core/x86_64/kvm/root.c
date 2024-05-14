@@ -76,6 +76,6 @@ struct vp_pa*
 
             vp_pa* ret = value_as (map_find(&self->pa, (any_t) pa), vp_pa*);
             if (trait_of (ret) != vp_pa_t) return null_t;
-            if (vp_pa_len(ret) > len)      return null_t;
+            if (vp_pa_len(ret) < len)      return null_t;
             return ret;
 }
