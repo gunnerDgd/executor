@@ -1,5 +1,5 @@
-#ifndef VAPOR_CORE_KVM_BUS_H
-#define VAPOR_CORE_KVM_BUS_H
+#ifndef VAPOR_CORE_HYPERV_BUS_H
+#define VAPOR_CORE_HYPERV_BUS_H
 
 #include <core.h>
 

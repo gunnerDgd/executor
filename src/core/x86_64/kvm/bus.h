@@ -41,4 +41,14 @@ bool_t vp_bus_new  (vp_bus*, u32_t, va_list);
 bool_t vp_bus_clone(vp_bus*, vp_bus*)       ;
 void   vp_bus_del  (vp_bus*)                ;
 
+bool_t vp_bus_in8  (vp_bus*, reg_t, u8_t *);
+bool_t vp_bus_in16 (vp_bus*, reg_t, u16_t*);
+bool_t vp_bus_in32 (vp_bus*, reg_t, u32_t*);
+bool_t vp_bus_in64 (vp_bus*, reg_t, u64_t*);
+
+bool_t vp_bus_out8 (vp_bus*, reg_t, u8_t *);
+bool_t vp_bus_out16(vp_bus*, reg_t, u16_t*);
+bool_t vp_bus_out32(vp_bus*, reg_t, u32_t*);
+bool_t vp_bus_out64(vp_bus*, reg_t, u64_t*);
+
 #endif
