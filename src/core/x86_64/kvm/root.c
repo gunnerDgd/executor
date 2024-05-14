@@ -8,6 +8,8 @@
 #include <linux/kvm.h>
 #include <sys/ioctl.h>
 
+#include <thread.h>
+
 obj_trait vp_root_trait = make_trait (
     vp_root_new    ,
     vp_root_clone  ,
@@ -24,11 +26,19 @@ bool_t
         (vp_root* self, u32_t count, va_list arg)                  {
             if (!make_at (&self->cpu, map) from (0)) return false_t;
             if (!make_at (&self->pa , map) from (0)) return false_t;
+            struct kvm_pit_config pit = { .flags = 0 };
+            u64_t                 map = 0xfeffc000;
+            self->thd = this_thd();
             self->map = 0;
 
-            if ((self->root = ioctl(vp_core.kvm, KVM_CREATE_VM, 0)) < 0)         goto new_err;
-            if (ioctl(self->root, KVM_SET_TSS_ADDR         , 0xfeffc000 + 1 KB)) goto new_err;
-            if (ioctl(self->root, KVM_SET_IDENTITY_MAP_ADDR, 0xfeffc000))        goto new_err;
+            if ((self->root = ioctl(vp_core.kvm, KVM_CREATE_VM, 0)) < 0)   goto new_err;
+            if (ioctl(self->root, KVM_SET_TSS_ADDR         ,  map + 1 KB)) goto new_err;
+            if (ioctl(self->root, KVM_SET_IDENTITY_MAP_ADDR, &map))        goto new_err;
+            if (ioctl(self->root, KVM_CREATE_IRQCHIP       , 0))           goto new_err;
+            if (ioctl(self->root, KVM_CREATE_PIT2          , &pit))        goto new_err;
+
+            if (!make (vp_pa) from (3, self, map, 4 KB)) goto new_err;
+            if (!list_move_back(&vp_core.root, self))    goto new_err;
             return true_t;
     new_err:
             del (&self->cpu);
@@ -65,7 +75,7 @@ struct vp_pa*
             if (trait_of(self) != vp_root_t) return null_t;
 
             vp_pa* ret = value_as (map_find(&self->pa, (any_t) pa), vp_pa*);
-            if (trait_of(pa) != vp_pa_t) return null_t;
-            if (vp_pa_len(ret) > len)    return null_t;
+            if (trait_of (ret) != vp_pa_t) return null_t;
+            if (vp_pa_len(ret) > len)      return null_t;
             return ret;
 }
