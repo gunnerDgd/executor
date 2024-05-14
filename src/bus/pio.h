@@ -6,8 +6,8 @@
 extern obj_trait *vp_pio_t;
 typedef struct    vp_pio  {
     obj    head;
-    map    pio;
     vp_bus bus;
+    map    pio;
     vp_pa  pa;
 }   vp_pio;
 

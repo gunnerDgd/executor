@@ -3,14 +3,14 @@
 
 #include "../bus.h"
 
-typedef struct vp_pio_ops               {
-    bool_t (*out32)(obj*, u16_t, u32_t*);
-    bool_t (*out16)(obj*, u16_t, u16_t*);
-    bool_t (*out8) (obj*, u16_t, u8_t *);
+typedef struct vp_pio_ops        {
+    bool_t (*out32)(obj*, u32_t*);
+    bool_t (*out16)(obj*, u16_t*);
+    bool_t (*out8) (obj*, u8_t *);
 
-    bool_t (*in32) (obj*, u16_t, u32_t*);
-    bool_t (*in16) (obj*, u16_t, u16_t*);
-    bool_t (*in8)  (obj*, u16_t, u8_t *);
+    bool_t (*in32) (obj*, u32_t*);
+    bool_t (*in16) (obj*, u16_t*);
+    bool_t (*in8)  (obj*, u8_t *);
 }   vp_pio_ops;
 
 #define vp_make_pio_ops(par_in8, par_in16, par_in32, par_out8, par_out16, par_out32) {\
@@ -26,7 +26,7 @@ typedef struct vp_pio_ops               {
 extern obj_trait *vp_pio_dev_t;
 typedef struct    vp_pio_dev  {
     obj         head;
-    u64_t       begin, end;
+    u64_t       port;
     vp_pio_ops *ops;
     vp_pio     *pio;
     obj        *dev;
