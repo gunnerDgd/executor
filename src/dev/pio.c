@@ -21,13 +21,13 @@ ord_t
             return ord_eq;
 }
 
-ops_cmp vp_pio_do_cmp = make_ops_cmp (
+ops_cmp vp_pio_op_cmp = make_ops_cmp (
     vp_pio_dev_do_ord    ,
     vp_pio_dev_do_ord_arg
 );
 
-obj_ops vp_pio_do     = {
-    .cmp = &vp_pio_do_cmp
+obj_ops vp_pio_op     = {
+    .cmp = &vp_pio_op_cmp
 };
 
 obj_trait vp_pio_dev_trait = make_trait (
@@ -36,7 +36,7 @@ obj_trait vp_pio_dev_trait = make_trait (
     null_t            ,
     vp_pio_dev_del    ,
     sizeof(vp_pio_dev),
-    &vp_pio_do
+    &vp_pio_op
 );
 
 obj_trait *vp_pio_dev_t = &vp_pio_dev_trait;
@@ -50,7 +50,6 @@ bool_t
             obj        *dev  = null_t; if (count > 3) dev  = va_arg(arg, any_t);
 
             if (trait_of(pio) != vp_pio_t) return false_t;
-            if (trait_of(dev) == null_t)   return false_t;
             if (!ops)                      return false_t;
 
             self->port = port;
