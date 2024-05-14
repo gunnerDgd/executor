@@ -12,7 +12,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->in8         (
                     dev->dev,
-                    addr    ,
                     in
                 );
 
@@ -30,7 +29,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->in16        (
                     dev->dev,
-                    addr    ,
                     in
                 );
 
@@ -48,7 +46,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->in32        (
                     dev->dev,
-                    addr    ,
                     in
                 );
 
@@ -72,7 +69,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->out8        (
                     dev->dev,
-                    addr    ,
                     out
                 );
 
@@ -90,7 +86,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->out16       (
                     dev->dev,
-                    addr    ,
                     out
                 );
 
@@ -108,7 +103,6 @@ bool_t
             if (trait_of(dev) == vp_pio_dev_t)
                 return dev->ops->out32       (
                     dev->dev,
-                    addr    ,
                     out
                 );
 
