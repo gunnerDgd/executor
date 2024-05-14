@@ -17,13 +17,15 @@ obj_trait vp_core_trait = make_trait (
 
 obj_trait *vp_core_t = &vp_core_trait;
 
+struct vp_core vp_core;
+
 bool_t
     vp_core_new
         (struct vp_core* self, u32_t count, va_list arg) {
             self->kvm = open("/dev/kvm", O_RDWR);
 
-            if (!make_at (&self->root, list) from (0)) return false_t;
-            if (self->kvm < 0)                         return false_t;
+            if (!make_at (&self->root, list) from (0)) goto new_err;
+            if (self->kvm < 0)                         goto new_err;
             return true_t;
     new_err:
             del  (&self->root);
