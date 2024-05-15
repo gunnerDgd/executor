@@ -8,6 +8,7 @@ endif()
 
 add_subdirectory(bus)
 add_subdirectory(dev)
+add_subdirectory(firmware)
 
 add_library          (vapor INTERFACE)
 target_link_libraries(vapor INTERFACE
