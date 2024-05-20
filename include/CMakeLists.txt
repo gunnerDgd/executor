@@ -14,9 +14,6 @@ add_library (vapor-include STATIC
 
     vp/dev.h
     vp/dev/pio.h
-
-    vp/firmware.h
-    vp/firmware/linux.h
 )
 
 set_target_properties(vapor-include PROPERTIES LINKER_LANGUAGE C)

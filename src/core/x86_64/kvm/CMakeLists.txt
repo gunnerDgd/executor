@@ -10,6 +10,12 @@ add_library (vapor-core STATIC
     cpu.h
     cpu.c
 
+    cpu/mmio.h
+    cpu/mmio.c
+
+    cpu/io.h
+    cpu/io.c
+
     pa.h
     pa.c
 
@@ -24,5 +30,6 @@ add_library (vapor-core STATIC
 
     pic.h
     pic.c
-
 )
+
+target_link_libraries(vapor-core PRIVATE asterisk crisp)
