@@ -20,8 +20,6 @@ struct            vp_core  {
     obj   head;
     list  root;
     u64_t kvm;
-    u64_t cpu;
-    u64_t mem;
 };
 
 extern struct vp_core vp_core;

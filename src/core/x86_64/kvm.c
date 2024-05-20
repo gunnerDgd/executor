@@ -31,8 +31,6 @@ bool_t
             del  (&self->root);
             close(self->kvm);
             self->kvm = -1;
-            self->cpu =  0;
-            self->mem =  0;
             return false_t;
 }
 
