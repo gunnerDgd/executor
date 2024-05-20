@@ -277,10 +277,9 @@ void
 
 bool_t
     vp_cpu_sync_out
-        (vp_cpu* self, vp_reg* arg)                          {
-            if (trait_of (self) != vp_cpu_t)   return false_t;
-            if (self->root->thd != this_thd()) return false_t;
-            if (!arg)                          return false_t;
+        (vp_cpu* self, vp_reg* arg)                        {
+            if (trait_of (self) != vp_cpu_t) return false_t;
+            if (!arg)                        return false_t;
             struct kvm_sregs sregs;
             struct kvm_regs  regs ;
 
@@ -306,10 +305,9 @@ bool_t
 
 bool_t
     vp_cpu_sync_in
-        (vp_cpu* self, vp_reg* arg)                          {
-            if (trait_of (self) != vp_cpu_t)   return false_t;
-            if (self->root->thd != this_thd()) return false_t;
-            if (!arg)                          return false_t;
+        (vp_cpu* self, vp_reg* arg)                        {
+            if (trait_of (self) != vp_cpu_t) return false_t;
+            if (!arg)                        return false_t;
             struct kvm_sregs sregs;
             struct kvm_regs  regs ;
 
@@ -333,137 +331,61 @@ bool_t
             return true_t;
 }
 
-fut*
-    vp_cpu_run
-        (vp_cpu* self)                                       {
-            if (trait_of (self) != vp_cpu_t)   return false_t;
-            if (self->root->thd != this_thd()) return false_t;
-            if (self->stat != vp_cpu_ready)    return false_t;
-            self->stat = vp_cpu_busy;
+bool_t
+    vp_cpu_id
+        (vp_cpu* self, vp_cpuid* arg)                     {
+            if (trait_of(self) != vp_cpu_t) return false_t;
+            struct                                        {
+                u32_t                   num    ;
+                u32_t                   pad    ;
+                struct kvm_cpuid_entry2 id[128];
+            }   cpuid;
 
-            thd *run = make (thd) from (2, vp_cpu_do, self);
-            fut *ret = thd_fut(run);
+            cpuid.num = 128;
+            if  (ioctl(vp_core.kvm, KVM_GET_SUPPORTED_CPUID, &cpuid)) return false_t;
+            for (u64_t i = 0 ; i < 128 ; ++i)                                       {
+                if (cpuid.id[i].function != KVM_CPUID_SIGNATURE) continue;
+                cpuid.id[i].eax = (arg) ? arg->eax : KVM_CPUID_FEATURES;
+                cpuid.id[i].ebx = (arg) ? arg->ebx : 0x4b4d564b;
+                cpuid.id[i].ecx = (arg) ? arg->ecx : 0x564b4d56;
+                cpuid.id[i].edx = (arg) ? arg->edx : 0x4d;
 
-            if    (trait_of(ret) != fut_t) goto run_err;
-            del   (run);
-            return ret;
-    run_err:
-            self->stat = vp_cpu_ready;
+                if (ioctl(self->cpu, KVM_SET_CPUID2, &cpuid)) return false_t;
+                return true_t;
+            }
+
             return false_t;
 }
 
 u64_t
+    vp_cpu_run
+        (vp_cpu* self)                                     {
+            if (trait_of (self) != vp_cpu_t) return false_t;
+            if (self->stat != vp_cpu_ready)  return false_t;
+
+            self->stat = vp_cpu_busy;
+            self->thd  = this_thd ();
+
+            return vp_cpu_do(self);
+}
+
+bool_t
     vp_cpu_error
-        (vp_cpu* self)                                    {
+        (vp_cpu* self, vp_err* err)                       {
             if (trait_of(self) != vp_cpu_t) return false_t;
-            struct kvm_run *run = self->run;
+            if (self->stat != vp_cpu_err)   return false_t;
+            if (!err)                       return false_t;
+            err->err = self->run->exit_reason;
 
-            switch (run->exit_reason)                                                             {
-                case KVM_EXIT_INTERNAL_ERROR: return run->internal.suberror                       ;
-                case KVM_EXIT_UNKNOWN       : return run->hw.hardware_exit_reason                 ;
-                case KVM_EXIT_FAIL_ENTRY    : return run->fail_entry.hardware_entry_failure_reason;
-                default                     : return 0;
+            switch (err->err)                                                                                      {
+                case KVM_EXIT_INTERNAL_ERROR: err->sub = self->run->internal.suberror                       ; break;
+                case KVM_EXIT_UNKNOWN       : err->sub = self->run->hw.hardware_exit_reason                 ; break;
+                case KVM_EXIT_FAIL_ENTRY    : err->sub = self->run->fail_entry.hardware_entry_failure_reason; break;
+                default                     : return false_t;
             }
+
+            return true_t;
 }
 
-u64_t
-    vp_io_port
-        (vp_cpu* self)                               {
-            if (trait_of(self) != vp_cpu_t) return -1;
-            struct kvm_run *run = self->run;
 
-            if (run->exit_reason != KVM_EXIT_IO) return -1;
-            if (self->root->thd  != this_thd())  return -1;
-            if (self->stat       != vp_cpu_exit) return -1;
-            return run->io.port;
-}
 
-u64_t
-    vp_io_len
-        (vp_cpu* self)                                 {
-            if (trait_of(self) != vp_cpu_t) return 0ull;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_IO) return 0ull;
-            if (self->root->thd  != this_thd ()) return 0ull;
-            if (self->stat       != vp_cpu_exit) return 0ull;
-            return run->io.size;
-}
-
-u64_t
-    vp_io_dir
-        (vp_cpu* self)                               {
-            if (trait_of(self) != vp_cpu_t) return -1;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_IO) return -1;
-            if (self->root->thd  != this_thd ()) return -1;
-            if (self->stat       != vp_cpu_exit) return -1;
-            return run->io.direction;
-}
-
-void
-    vp_io_ready
-        (vp_cpu* self, any_t arg)                 {
-            if (trait_of(self) != vp_cpu_t) return;
-            if (!arg)                       return;
-            struct kvm_run *run = self->run;
-            u8_t           *buf = run;
-
-            if (run->exit_reason != KVM_EXIT_IO) return;
-            if (self->root->thd  != this_thd ()) return;
-            if (self->stat       != vp_cpu_exit) return;
-
-            mem_copy(buf + run->io.data_offset, arg, run->io.size);
-            self->stat = vp_cpu_ready;
-}
-
-u64_t
-    vp_mmio_addr
-        (vp_cpu* self)                               {
-            if (trait_of(self) != vp_cpu_t) return -1;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_MMIO) return -1;
-            if (self->root->thd  != this_thd ())   return -1;
-            if (self->stat       != vp_cpu_exit)   return -1;
-            return run->mmio.phys_addr;
-}
-
-u64_t
-    vp_mmio_len
-        (vp_cpu* self)                              {
-            if (trait_of(self) != vp_cpu_t) return 0;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_MMIO) return 0ull;
-            if (self->root->thd  != this_thd ())   return 0ull;
-            if (self->stat       != vp_cpu_exit)   return 0ull;
-            return run->mmio.len;
-}
-
-u64_t
-    vp_mmio_dir
-        (vp_cpu* self)                               {
-            if (trait_of(self) != vp_cpu_t) return -1;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_MMIO) return -1;
-            if (self->root->thd  != this_thd ())   return -1;
-            if (self->stat       != vp_cpu_exit)   return -1;
-            return run->mmio.is_write;
-}
-
-void
-    vp_mmio_ready
-        (vp_cpu* self, any_t buf)                 {
-            if (trait_of(self) != vp_cpu_t) return;
-            struct kvm_run *run = self->run;
-
-            if (run->exit_reason != KVM_EXIT_MMIO) return;
-            if (self->root->thd  != this_thd ())   return;
-            if (self->stat       != vp_cpu_exit)   return;
-
-            mem_copy(self->run->mmio.data, buf, self->run->mmio.len);
-            self->stat = vp_cpu_ready;
-}

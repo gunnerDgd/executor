@@ -51,6 +51,19 @@ typedef struct vp_reg              {
             gs,
             fs;
 }   vp_reg;
+
+typedef struct vp_cpuid {
+    u64_t eax,
+          ebx,
+          ecx,
+          edx;
+}   vp_cpuid;
+
+typedef struct vp_err {
+    u64_t err,
+          sub;
+}   vp_err;
+
 #endif
 
 #define vp_cpu_halt     0
@@ -65,18 +78,28 @@ typedef struct vp_reg              {
 extern obj_trait *vp_cpu_t;
 typedef struct    vp_cpu { u8_t cpu[128]; } vp_cpu;
 
-bool_t vp_cpu_sync_out(vp_cpu*, vp_reg*);
-bool_t vp_cpu_sync_in (vp_cpu*, vp_reg*);
+bool_t vp_cpu_sync_out(vp_cpu*, vp_reg  *);
+bool_t vp_cpu_sync_in (vp_cpu*, vp_reg  *);
 
-u64_t  vp_cpu_error   (vp_cpu*);
-fut*   vp_cpu_run     (vp_cpu*);
+#ifdef PRESET_ARCH_X86_64
+bool_t vp_cpu_id      (vp_cpu*, vp_cpuid*);
+#endif
 
-void   vp_io_ready    (vp_cpu*, any_t);
+bool_t vp_cpu_error   (vp_cpu*, vp_err*);
+u64_t  vp_cpu_run     (vp_cpu*);
+
+void   vp_io_ready    (vp_cpu*);
+u64_t  vp_io_out      (vp_cpu*, any_t);
+u64_t  vp_io_in       (vp_cpu*, any_t);
+
 u64_t  vp_io_port     (vp_cpu*);
 u64_t  vp_io_len      (vp_cpu*);
 u64_t  vp_io_dir      (vp_cpu*);
 
-void   vp_mmio_ready  (vp_cpu*, any_t);
+void   vp_mmio_ready  (vp_cpu*);
+u64_t  vp_mmio_out    (vp_cpu*, any_t);
+u64_t  vp_mmio_in     (vp_cpu*, any_t);
+
 u64_t  vp_mmio_addr   (vp_cpu*);
 u64_t  vp_mmio_len    (vp_cpu*);
 u64_t  vp_mmio_dir    (vp_cpu*);
