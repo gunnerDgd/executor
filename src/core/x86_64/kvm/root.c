@@ -69,6 +69,16 @@ struct vp_cpu*
             );
 }
 
+struct vp_map*
+    vp_root_map
+        (vp_root* self, reg_t map, u64_t len)       {
+            vp_pa  *pa  = vp_root_pa(self, map, len);
+            vp_map *ret = vp_pa_sub (pa);
+
+            if (trait_of(ret) != vp_map_t) return null_t;
+            return ret;
+}
+
 struct vp_pa*
     vp_root_pa
         (vp_root* self, reg_t pa, u64_t len)              {
@@ -77,5 +87,20 @@ struct vp_pa*
             vp_pa* ret = value_as (map_find(&self->pa, (any_t) pa), vp_pa*);
             if (trait_of (ret) != vp_pa_t) return null_t;
             if (vp_pa_len(ret) < len)      return null_t;
+            return ret;
+}
+
+void*
+    vp_root_ua
+        (vp_root* self, reg_t ua, u64_t len)         {
+            vp_map *map = vp_root_map (self, ua, len);
+            vp_pa  *pa  = vp_map_pa   (map)          ;
+
+            if (trait_of(map) != vp_map_t) return null_t;
+            if (trait_of(pa)  != vp_pa_t)  return null_t;
+            u8_t *ret = vp_map_ua(map);
+
+            ret  -= vp_pa_begin(pa);
+            ret  += ua;
             return ret;
 }
