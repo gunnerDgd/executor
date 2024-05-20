@@ -6,6 +6,7 @@
 #include <thread.h>
 
 struct vp_cpu;
+struct vp_map;
 struct vp_pa ;
 
 extern obj_trait *vp_root_t;
@@ -23,6 +24,8 @@ bool_t         vp_root_clone(vp_root*, vp_root*)      ;
 void           vp_root_del  (vp_root*)                ;
 
 struct vp_cpu* vp_root_cpu  (vp_root*, u64_t)       ;
+struct vp_map* vp_root_map  (vp_root*, reg_t, u64_t);
 struct vp_pa*  vp_root_pa   (vp_root*, reg_t, u64_t);
+void*          vp_root_ua   (vp_root*, reg_t, u64_t);
 
 #endif
